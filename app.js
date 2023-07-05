@@ -3,6 +3,13 @@ const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config()
 const userRouter = require('./app/routes/user.route');
+const authRouter = require('./app/routes/auth.route');
+const productRouter = require('./app/routes/product.route');
+const cors = require('cors');
+
+app.use(express.json())
+app.use(cors());
+
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => {
@@ -10,10 +17,12 @@ mongoose.connect(process.env.MONGO_URL)
     })
     .catch(err => console.log(err))
 
-app.get('/api/test', (req, res) => {
-    res.send('hello world')
-})
+
+
+    
 app.use('/api/user', userRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/product', productRouter)
 
 
 app.listen(5000, () => {
