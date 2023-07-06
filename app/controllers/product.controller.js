@@ -1,12 +1,10 @@
 const Product = require("../models/product.model");
 
-
-
 const CreateProduct = async (req, res) => {
     try {
-        const newProduct = await new Product(req.body)
-        newProduct.save()
-        res.status(200).json(newProduct)
+        const newProduct =  new Product(req.body)
+        const productSave = await newProduct.save()
+        res.status(200).json(productSave)
     } catch (error) {
         res.status(500).json(error)
     }

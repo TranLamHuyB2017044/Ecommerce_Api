@@ -5,6 +5,8 @@ require('dotenv').config()
 const userRouter = require('./app/routes/user.route');
 const authRouter = require('./app/routes/auth.route');
 const productRouter = require('./app/routes/product.route');
+const cartRouter = require('./app/routes/cart.route');
+const orderRouter = require('./app/routes/order.route');
 const cors = require('cors');
 
 app.use(express.json())
@@ -23,6 +25,8 @@ mongoose.connect(process.env.MONGO_URL)
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/product', productRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/order', orderRouter)
 
 
 app.listen(5000, () => {
