@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
   const newUser = new User({
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
     username: req.body.username,
     email: req.body.email,
     password: CryptoJS.AES.encrypt(
@@ -24,7 +26,7 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if(!user) {
-        res.status(401).json('wrong username');
+        return res.status(401).json('wrong username');
     }
     const hashPassword = CryptoJS.AES.decrypt(
       user.password,
@@ -32,7 +34,7 @@ const login = async (req, res) => {
     );
     const Orignalpassword = hashPassword.toString(CryptoJS.enc.Utf8);
     if(Orignalpassword !== req.body.password) {
-        res.status(401).json('wrong password');
+        return res.status(401).json('wrong password');
     }
     const accessToken = jwt.sign({
         id: user._id,
@@ -42,7 +44,7 @@ const login = async (req, res) => {
       {expiresIn: '3d'}
     )
     const {password, ...others} = user._doc 
-    res.status(200).json({others, accessToken});
+    return res.status(200).json({others, accessToken});
   } catch (error) {
     res.status(500).json(error);
   }
