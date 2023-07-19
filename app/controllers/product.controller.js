@@ -44,6 +44,7 @@ const GetProduct = async (req, res) => {
 const GetAllProduct = async (req, res) => {
     const qNew = req.query.new;
     const qCategory = req.query.category
+    const search = req.query.search;
   try {
     let products;
     if(qNew){
@@ -51,8 +52,12 @@ const GetAllProduct = async (req, res) => {
     }else if(qCategory){
         products = await Product.find({categories: {
             $in:[qCategory]
-        }})
-    }else{
+        }}
+        )
+    }else if(search){
+      products = await Product.find({title: { $regex: search, $options: "i"}})
+    }
+    else{
         products = await Product.find();
     }
     res.status(200).json(products);
