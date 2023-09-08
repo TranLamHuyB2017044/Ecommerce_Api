@@ -1,4 +1,6 @@
 const User = require("../models/user.model");
+const cloudinary = require('cloudinary').v2;
+const CryptoJS = require("crypto-js");
 
 const UpdateUser = async (req, res) => {
   if (req.body.password) {
@@ -8,11 +10,16 @@ const UpdateUser = async (req, res) => {
     ).toString();
   }
   try {
-    const updateUser = await User.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
+    let updateUser = await User.findById(req.params.id)
+    await cloudinary.uploader.destroy(updateUser.avatar_id);
+    const data = {
+      username: req.body.username || updateUser.username,
+      email: req.body.email || updateUser.email,
+      avatar: req.file.path || updateUser.avatar,
+      avatar_id: req.file.filename || updateUser.avatar_id,
+      password: req.body.password || updateUser.password,
+    } 
+    updateUser = await User.findByIdAndUpdate(req.params.id, data, {new: true});
     res.status(200).json(updateUser);
   } catch (error) {
     res.status(500).json(error);
@@ -21,7 +28,9 @@ const UpdateUser = async (req, res) => {
 
 const DeleteUser = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id)
+    cloudinary.uploader.destroy(user.avatar_id)
+    await User.findByIdAndRemove(req.params.id)
     res.status(200).json("User has been deleted");
   } catch (error) {
     res.status(500).json(error);

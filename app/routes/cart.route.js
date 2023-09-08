@@ -4,7 +4,7 @@ const Cart = require('../controllers/cart.controller');
 const router = express.Router();
 
 router.route('/')
-    .post(verifyToken, Cart.CreateCart)
+    .post(Cart.CreateCart)
     .get(verifyTokenAndAdmin, Cart.GetAll)
 router.route('/:id')
     .get(verifyTokenAndAuthorization, Cart.GetUserCart)

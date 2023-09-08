@@ -1,15 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const UserSchema = new Schema({
-    firstname: {type: String, required: true},
-    lastname: {type: String, required: true},
-    username: {type: String, required: true, unique: true},
-    email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
-    isAdmin: {type: Boolean, default: false},
-}, {timestamps: true});
+const UserSchema = new Schema(
+  {
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    avatar: { type: String, default: 'https://mcdn.coolmate.me/image/June2023/tom-and-jerry-meme-cuc-hai-huoc-de-thuong-1447_451_(1).jpeg'},
+    avatar_id: { type: String},
+    isAdmin: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
-
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model("User", UserSchema);
 module.exports = User;

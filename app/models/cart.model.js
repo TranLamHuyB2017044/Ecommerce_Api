@@ -3,8 +3,9 @@ const { Schema } = mongoose;
 
 const CartSchema = new Schema(
   {
-    userID: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    totalPrice: { type: Number}
   },
   { timestamps: true }
 );

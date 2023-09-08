@@ -1,14 +1,16 @@
 const User = require("../models/user.model");
 const CryptoJS = require("crypto-js");
 const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary').v2;
 
 
 const register = async (req, res) => {
   const newUser = new User({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
     username: req.body.username,
     email: req.body.email,
+    avatar: req.file?.path,
+    avatar_id: req.file?.filename,
+    isAdmin: req.body.isAdmin,
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.SECRET_KEYPASS
@@ -18,6 +20,9 @@ const register = async (req, res) => {
     const savedUser = await newUser.save();
     res.status(200).json(savedUser);
   } catch (error) {
+    if(req.file){
+      cloudinary.uploader.destroy(req.file.filename);
+    }
     res.status(500).json(error);
   }
 };

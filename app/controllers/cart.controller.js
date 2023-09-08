@@ -1,9 +1,9 @@
 const Cart = require("../models/cart.model");
 
 
-
 const CreateCart = async (req, res) => {
     try {
+      
         const newCart =  new Cart(req.body)
         const CartSave = await newCart.save()
         return res.status(200).json(CartSave)
@@ -37,7 +37,7 @@ const DeleteCart = async (req, res) => {
 
 const GetUserCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({userID: req.params.userID});
+    const cart = await Cart.findById(req.params.id).populate('user', '-_id').populate('products', '-_id')
     res.status(200).json(cart);
   } catch (error) {
     res.status(500).json(error);
