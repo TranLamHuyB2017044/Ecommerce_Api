@@ -11,7 +11,7 @@ router.route('/stats')
     .get(verifyTokenAndAdmin, User.GetUserStats)
 
 router.route('/:id')
-    .put(verifyTokenAndAuthorization, fileUploader.single('avatar'), User.UpdateUser)
+    .put(verifyTokenAndAuthorization, fileUploader.avataUpload.single('avatar'), User.UpdateUser)
     .delete(verifyTokenAndAuthorization, User.DeleteUser)
     .get(verifyTokenAndAdmin, User.GetUser)
 

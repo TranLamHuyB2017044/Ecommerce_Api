@@ -15,6 +15,8 @@ const UpdateUser = async (req, res) => {
     const data = {
       username: req.body.username || updateUser.username,
       email: req.body.email || updateUser.email,
+      address: req.body.address || updateUser.address,
+      phone: req.body.phone || updateUser.phone,
       avatar: req.file.path || updateUser.avatar,
       avatar_id: req.file.filename || updateUser.avatar_id,
       password: req.body.password || updateUser.password,
