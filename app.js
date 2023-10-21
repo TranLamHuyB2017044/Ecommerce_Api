@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+var bodyParser = require('body-parser')
 require("dotenv").config();
 const userRouter = require("./app/routes/user.route");
 const authRouter = require("./app/routes/auth.route");
@@ -11,6 +12,9 @@ const cors = require("cors");
 
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true }))
+
 
 mongoose
   .connect(process.env.MONGO_URL)
