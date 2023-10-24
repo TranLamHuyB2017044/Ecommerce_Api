@@ -17,7 +17,6 @@ const CreateCart = async (req, res) => {
         productItem.quantity += quantity;
         cart.products[itemIndex] = productItem;
       } else {
-        console.log("cart", cart.products);
         cart.products.push({productId, color, quantity, size})
       }
       cart = await cart.save();
@@ -25,7 +24,6 @@ const CreateCart = async (req, res) => {
     } else {
       // if no cart for user, create new
       const newCart = await Cart.create(req.body);
-      console.log("newCart", newCart);
       return res.status(200).send(newCart);
     }
   } catch (error) {
@@ -35,8 +33,10 @@ const CreateCart = async (req, res) => {
 
 const UpdateCart = async (req, res) => {
   try {
-    const updateCart = await Cart.findByIdAndUpdate(
-      req.params.id,
+    const id = await User.findById(req.params.id);
+    const cart = await Cart.findOne()
+    const updateCart = await Cart.findOneAndUpdate(
+      {userId: id},
       { $set: req.body },
       { new: true }
     );
@@ -50,9 +50,8 @@ const DeleteCart = async (req, res) => {
   try {
     const id = await User.findById(req.params.id);
     const cart = await Cart.findOne({userId: id})
-    const productId = req.body
-    cart.products.splice(productId, 1)    
-    
+    const {productIndex} = req.body
+    cart.products.splice(productIndex, 1)   
     cart.save()
     res.status(200).send(cart);
   } catch (error) {
