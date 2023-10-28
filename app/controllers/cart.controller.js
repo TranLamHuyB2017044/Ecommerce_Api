@@ -4,9 +4,8 @@ const CreateCart = async (req, res) => {
   const {products} = req.body
   const [{productId, color, quantity, size}] = products
   try {
-    const userId = await User.findOne(req.body._id);
+    const userId = await User.findById(req.body.userId);
     let cart = await Cart.findOne({ userId });
-
     if (cart) {
       // if cart is exist for user
       let itemIndex = cart.products.findIndex(product => {
@@ -18,12 +17,15 @@ const CreateCart = async (req, res) => {
         cart.products[itemIndex] = productItem;
       } else {
         cart.products.push({productId, color, quantity, size})
+        await User.findByIdAndUpdate(userId, {cart: cart._id}, {new:true})
+
       }
       cart = await cart.save();
       return res.status(201).send(cart);
     } else {
       // if no cart for user, create new
       const newCart = await Cart.create(req.body);
+      await User.findByIdAndUpdate(userId, {cart: newCart._id}, {new:true})
       return res.status(200).send(newCart);
     }
   } catch (error) {
