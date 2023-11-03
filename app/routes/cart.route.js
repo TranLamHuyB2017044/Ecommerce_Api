@@ -8,7 +8,7 @@ router.route('/')
     .get(verifyTokenAndAdmin, Cart.GetAll)
 router.route('/:id')
     .get(verifyTokenAndAuthorization, Cart.GetUserCart)
-    .put(verifyTokenAndAuthorization, Cart.UpdateCart)
+    .put(Cart.UpdateCart)
     .delete(verifyTokenAndAuthorization, Cart.DeleteCart)
 
 
