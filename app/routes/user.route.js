@@ -5,7 +5,7 @@ const fileUploader = require('../config/cloudinary.config');
 
 const router = express.Router();
 router.route('/')
-.get(verifyTokenAndAdmin, User.GetAllUser)
+    .get(verifyTokenAndAdmin, User.GetAllUser)
 
 router.route('/stats')
     .get(verifyTokenAndAdmin, User.GetUserStats)

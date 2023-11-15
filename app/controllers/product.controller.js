@@ -71,14 +71,19 @@ const UpdateProduct = async (req, res) => {
       inStock: req.body.inStock || updateProduct.inStock,
     };
 
-    if (req.files) {
+    if (req.files.length == 0) {
+      data["img"] = updateProduct.img;
+    } else {
+      for (const file of updateProduct.img) {
+        cloudinary.uploader.destroy(file.img_id);
+      }
       const imgURIs = [];
       const files = req.files;
       for (const file of files) {
         const { path, filename } = file;
         imgURIs.push({ url_img: path, img_id: filename });
       }
-      data["img"] = imgURIs;
+      data["img"] = imgURIs || updateProduct.img;
     }
     updateProduct = await Product.findByIdAndUpdate(req.params.id, data, {
       new: true,
@@ -90,7 +95,11 @@ const UpdateProduct = async (req, res) => {
 };
 
 const DeleteProduct = async (req, res) => {
+  const product = await Product.findById(req.params.id);
   try {
+    for (const file of product.img) {
+      cloudinary.uploader.destroy(file.img_id);
+    }
     await Product.findByIdAndDelete(req.params.id);
     // await Product.deleteMany() delete all products
     res.status(200).json("Product has been deleted");

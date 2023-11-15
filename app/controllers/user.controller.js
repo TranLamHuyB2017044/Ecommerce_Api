@@ -11,20 +11,23 @@ const UpdateUser = async (req, res) => {
   }
   try {
     let updateUser = await User.findById(req.params.id)
-    await cloudinary.uploader.destroy(updateUser.avatar_id);
+    if(updateUser.avatar_id){
+      await cloudinary.uploader.destroy(updateUser.avatar_id);
+    }
     const data = {
       username: req.body.username || updateUser.username,
       email: req.body.email || updateUser.email,
       address: req.body.address || updateUser.address,
       phone: req.body.phone || updateUser.phone,
-      avatar: req.file.path || updateUser.avatar,
-      avatar_id: req.file.filename || updateUser.avatar_id,
+      avatar: req.file?.path || updateUser.avatar,
+      avatar_id: req.file?.filename || updateUser.avatar_id,
       password: req.body.password || updateUser.password,
     } 
     updateUser = await User.findByIdAndUpdate(req.params.id, data, {new: true});
     res.status(200).json(updateUser);
   } catch (error) {
     res.status(500).json(error);
+    console.log(error);
   }
 };
 

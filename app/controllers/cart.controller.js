@@ -44,13 +44,14 @@ const UpdateCart = async (req, res) => {
   try {
     const id = await User.findById(req.params.id);
     const cart = await Cart.findOne({ userId: id });
-    const { _id, color, size, quantity } = req.body;
+    const { _id, color, size, quantity, active } = req.body;
     
     cart.products.forEach(product => {
         if(product.id === _id) {
           product.color = color || product.color
           product.size = size || product.size
           product.quantity = quantity || product.quantity
+          product.active = active || product.active
         }
     })
     cart.save()
