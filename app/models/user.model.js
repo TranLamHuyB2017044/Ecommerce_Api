@@ -11,7 +11,7 @@ const UserSchema = new Schema(
     phone: { type: String, required: true },
     password: { type: String, required: true },
     cart: {type: Schema.Types.ObjectId, ref: "Cart" , default: null},
-    order: {type: Schema.Types.ObjectId, ref: "Order" , default: null},
+    order: [{type: Schema.Types.ObjectId, ref: "Order" , default: null}],
     avatar: { type: String, default: 'https://mcdn.coolmate.me/image/June2023/tom-and-jerry-meme-cuc-hai-huoc-de-thuong-1447_451_(1).jpeg'},
     avatar_id: { type: String},
     isAdmin: { type: Boolean, default: false },
