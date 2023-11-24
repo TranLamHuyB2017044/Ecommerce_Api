@@ -10,7 +10,7 @@ const CartSchema = new Schema(
         color: {type: String, required:true},
         size: {type: String, required:true},
         quantity: {type: Number, required:true},
-        active: {type: Boolean, default: false}
+        active: {type: Boolean, default: false},
       }
     ]
   },

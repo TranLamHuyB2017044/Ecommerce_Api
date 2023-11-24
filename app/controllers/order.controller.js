@@ -1,7 +1,7 @@
 const Order = require("../models/order.model");
 const Cart = require("../models/cart.model");
 const User = require("../models/user.model");
-
+const Product = require("../models/product.model");
 const CreateOrder = async (req, res) => {
   try {
     const userId = await User.findById(req.body.userId);
@@ -62,7 +62,17 @@ const DeleteOrder = async (req, res) => {
 const GetUserOrder = async (req, res) => {
   try {
     
-    const Orders = await Order.find({userId: req.params.id});
+    const Orders = await Order.find({userId: req.params.id})
+    let productItem = []
+    let products = []
+    Orders.forEach((order) => productItem.push(...order.items));
+    const productPromises = productItem.map(async (item) => {
+      const product = await Product.findById(item.productId.toString());
+      item.productId = product
+      return product;
+    });
+
+    products = await Promise.all(productPromises);
 
     res.status(200).json(Orders);
   } catch (error) {
