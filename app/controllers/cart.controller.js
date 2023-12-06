@@ -58,7 +58,6 @@ const UpdateCart = async (req, res) => {
   
   } catch (error) {
     res.status(500).json(error);
-    console.log(error);
   }
 };
 
@@ -71,7 +70,7 @@ const DeleteCart = async (req, res) => {
     cart.save();
     res.status(200).send(cart);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error.message);
   }
 };
 
@@ -86,7 +85,8 @@ const GetUserCart = async (req, res) => {
       });
     res.status(200).json(cart);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error.message);
+
   }
 };
 

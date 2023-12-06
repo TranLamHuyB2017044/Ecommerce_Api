@@ -96,7 +96,6 @@ const GetOrder = async (req, res) => {
     res.status(200).json(Orders);
   } catch (error) {
     res.status(500).json(error);
-    console.log(error);
   }
 };
 

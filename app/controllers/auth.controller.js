@@ -34,7 +34,7 @@ const register = async (req, res) => {
     if (req.file) {
       cloudinary.uploader.destroy(req.file.filename);
     }
-    res.status(500).json(error);
+    res.status(500).json(error.message);
   }
 };
 
@@ -54,7 +54,7 @@ const login = async (req, res) => {
     }
     const accessToken = jwt.sign(
       {
-        id: user._id,
+        id: user.id,
         isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
@@ -62,7 +62,7 @@ const login = async (req, res) => {
     );
     const refreshToken = jwt.sign(
       {
-        id: user._id,
+        id: user.id,
         isAdmin: user.isAdmin,
       },
       process.env.REFRESH_TOKEN,
@@ -71,7 +71,8 @@ const login = async (req, res) => {
     const { password, ...others } = user._doc;
     return res.status(200).json({ others, accessToken, refreshToken });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error.message);
+    console.log(error)
   }
 };
 
@@ -86,7 +87,7 @@ const getAccessToken = (req, res) => {
       if(user){
         const newAccessToken = jwt.sign(
           {
-            id: user._id,
+            id: user.id,
             isAdmin: user.isAdmin,
           },
           process.env.JWT_SECRET,
@@ -94,7 +95,7 @@ const getAccessToken = (req, res) => {
         );
         const newRefreshToken = jwt.sign(
           {
-            id: user._id,
+            id: user.id,
             isAdmin: user.isAdmin,
           },
           process.env.REFRESH_TOKEN,
@@ -102,11 +103,11 @@ const getAccessToken = (req, res) => {
         );
         return res.status(200).json({newAccessToken: newAccessToken, refreshToken: newRefreshToken})
       }else{
-        return res.status(500).json(err, 'The user is not authorized');
+        return res.status(500).json('The user is not authorized');
       }
     });
   } catch (error) {
-    res.status(500).json({err: error})
+    res.status(500).json(error.message);
   }
 
 }
