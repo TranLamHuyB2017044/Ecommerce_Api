@@ -13,6 +13,6 @@ router.route('/stats')
 router.route('/:id')
     .put(verifyTokenAndAuthorization, fileUploader.avataUpload.single('avatar'), User.UpdateUser)
     .delete(verifyTokenAndAuthorization, User.DeleteUser)
-    .get(verifyTokenAndAdmin, User.GetUser)
+    .get(verifyTokenAndAuthorization, User.GetUser)
 
 module.exports = router

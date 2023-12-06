@@ -9,9 +9,10 @@ router.route('/')
 router.route('/icome')
     .get(verifyTokenAndAdmin, Order.getMonthlyIncome)
 router.route('/:id')
-    .get(verifyTokenAndAuthorization, Order.GetUserOrder)
+    .get(verifyTokenAndAuthorization, Order.GetOrder)
     .put(verifyTokenAndAdmin, Order.UpdateOrder)
     .delete(verifyTokenAndAdmin, Order.DeleteOrder)
-
+router.route('/userOrder/:id')
+    .get(verifyTokenAndAuthorization, Order.GetUserOrder)
 
 module.exports = router

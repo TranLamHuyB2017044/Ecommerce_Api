@@ -7,8 +7,7 @@ router.route('/register')
     .post(fileUploader.avataUpload.single('avatar'), User.register)
 router.route('/login')
     .post(User.login)
-
-
-
+router.route('/refreshToken')
+    .post(User.getAccessToken)
 
 module.exports = router

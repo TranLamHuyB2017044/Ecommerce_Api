@@ -80,10 +80,39 @@ const GetUserOrder = async (req, res) => {
     console.log(error);
   }
 };
+const GetOrder = async (req, res) => {
+  try {
+    
+    const Orders = await Order.findById(req.params.id).populate('userId')
+    let products = []
+    const productPromises = Orders.items.map(async (item) => {
+      const product = await Product.findById(item.productId.toString());
+      item.productId = product
+      return product;
+    });
+
+    products = await Promise.all(productPromises);
+
+    res.status(200).json(Orders);
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+};
 
 const GetAll = async (req, res) => {
   try {
-    const Orders = await Order.find();
+    const Orders = await Order.find().populate("userId");
+    let productItem = []
+    let products = []
+    Orders.forEach((order) => productItem.push(...order.items));
+    const productPromises = productItem.map(async (item) => {
+      const product = await Product.findById(item.productId.toString());
+      item.productId = product
+      return product;
+    });
+
+    products = await Promise.all(productPromises);
     res.status(200).json(Orders);
   } catch (error) {
     res.status(500).json(error);
@@ -118,4 +147,5 @@ module.exports = {
   CreateOrder,
   GetAll,
   getMonthlyIncome,
+  GetOrder
 };

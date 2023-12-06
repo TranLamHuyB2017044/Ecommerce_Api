@@ -58,13 +58,57 @@ const login = async (req, res) => {
         isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "3d" }
+      { expiresIn: "1m" }
+    );
+    const refreshToken = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+      },
+      process.env.REFRESH_TOKEN,
+      { expiresIn: "365d" }
     );
     const { password, ...others } = user._doc;
-    return res.status(200).json({ others, accessToken });
+    return res.status(200).json({ others, accessToken, refreshToken });
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-module.exports = { register, login };
+
+const getAccessToken = (req, res) => {
+  const {refreshToken} = req.body
+  try {
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, function(err, user){
+      if (err) {
+        return res.status(500).json(err, 'The user is not authorized');
+      }
+      if(user){
+        const newAccessToken = jwt.sign(
+          {
+            id: user._id,
+            isAdmin: user.isAdmin,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: "1m" }
+        );
+        const newRefreshToken = jwt.sign(
+          {
+            id: user._id,
+            isAdmin: user.isAdmin,
+          },
+          process.env.REFRESH_TOKEN,
+          { expiresIn: "365d" }
+        );
+        return res.status(200).json({newAccessToken: newAccessToken, refreshToken: newRefreshToken})
+      }else{
+        return res.status(500).json(err, 'The user is not authorized');
+      }
+    });
+  } catch (error) {
+    res.status(500).json({err: error})
+  }
+
+}
+
+module.exports = { register, login, getAccessToken };
