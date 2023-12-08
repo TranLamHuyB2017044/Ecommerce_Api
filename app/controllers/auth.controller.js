@@ -53,10 +53,7 @@ const login = async (req, res) => {
       return res.status(401).json("wrong password");
     }
     const accessToken = jwt.sign(
-      {
-        id: user.id,
-        isAdmin: user.isAdmin,
-      },
+      {id: user.id, isAdmin: user.isAdmin},
       process.env.JWT_SECRET,
       { expiresIn: "1m" }
     );
@@ -72,19 +69,18 @@ const login = async (req, res) => {
     return res.status(200).json({ others, accessToken, refreshToken });
   } catch (error) {
     res.status(500).json(error.message);
-    console.log(error)
+    console.log(error);
   }
 };
 
-
 const getAccessToken = (req, res) => {
-  const {refreshToken} = req.body
+  const { refreshToken } = req.body;
   try {
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, function(err, user){
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, function (err, user) {
       if (err) {
-        return res.status(500).json(err, 'The user is not authorized');
+        return res.status(500).json(err, "The user is not authorized");
       }
-      if(user){
+      if (user) {
         const newAccessToken = jwt.sign(
           {
             id: user.id,
@@ -101,15 +97,17 @@ const getAccessToken = (req, res) => {
           process.env.REFRESH_TOKEN,
           { expiresIn: "365d" }
         );
-        return res.status(200).json({newAccessToken: newAccessToken, refreshToken: newRefreshToken})
-      }else{
-        return res.status(500).json('The user is not authorized');
+        return res.status(200).json({
+          newAccessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        });
+      } else {
+        return res.status(500).json("The user is not authorized");
       }
     });
   } catch (error) {
     res.status(500).json(error.message);
   }
-
-}
+};
 
 module.exports = { register, login, getAccessToken };
