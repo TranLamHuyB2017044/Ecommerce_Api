@@ -24,7 +24,7 @@ const CreateOrder = async (req, res) => {
     const newOrder = await Order.create(data)
     userId.order.push(newOrder.id)
     userId.save()
-    return res.status(200).send(newOrder);
+    res.status(200).send(newOrder);
   } catch (error) {
     console.log(error)
     res.status(500).json(error);
