@@ -10,6 +10,27 @@ const cartRouter = require("./app/routes/cart.route");
 const orderRouter = require("./app/routes/order.route");
 const cors = require("cors");
 
+
+// Swagger
+
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUI = require('swagger-ui-express')
+const swaggerDefinition = require("./app/docs/swaggerDef");
+
+
+const options = {
+  definition: swaggerDefinition,
+  apis: ['./app/routes/*.js']
+}
+
+const specs = swaggerJsDoc(options)
+
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs))
+
+
+
+
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json()) // for parsing application/json
