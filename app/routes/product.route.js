@@ -1,5 +1,8 @@
 /**
  * @swagger
+ * tags:
+ *  name: "Product"
+ *  description: "Everything about Product"
  * /api/product:
  *   get:
  *     summary: Get all shoes
